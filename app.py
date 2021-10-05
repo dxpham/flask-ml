@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify, render_template
 from flask.logging import create_logger
 import logging
-
-import mlib
+import requests
+# import mlib
 
  
 from time import strftime
@@ -13,6 +13,8 @@ DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = 'SjdnUends821Jsdlkvxh391ksdODnejdDw'
+
+MODEL_URL="http://localhost:8080/predict/"
 
 class ReusableForm(Form):
     weight = FloatField('Weight:', validators=[validators.required()])
@@ -38,11 +40,12 @@ def hello():
         if form.validate():
             write_to_disk(weight)
 
-            prediction = mlib.predict(weight)
-            flash(f'Player whose weight is {weight} lbs is predicted to be {prediction["height_inches"]} inches or {prediction["height_human_readable"]} tall ')
+            prediction = requests.get(MODEL_URL+str(weight))
+            prediction = prediction.json()['prediction']            
+            flash(f'{prediction["height_inches"]} inches or {prediction["height_human_readable"]} tall for a player who weights {weight} lbs.')
 
         else:
-            flash('Error: All Fields are Required')
+            flash('Error: Try another time!')
 
         
 

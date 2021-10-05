@@ -4,7 +4,7 @@ FROM python:3.8.8-slim-buster
 WORKDIR /app
 
 # Copy source code to working directory
-COPY . app.py /app/
+COPY . pred_app.py /app/
 
 # Install packages from requirements.txt
 # hadolint ignore=DL3013
@@ -13,6 +13,5 @@ RUN pip install --no-cache-dir --upgrade pip &&\
 
 EXPOSE 8080
 
-ENTRYPOINT [ "python" ]
 
-CMD [ "app.py" ]
+CMD ["python","pred_app.py" ]
